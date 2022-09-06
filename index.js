@@ -3,41 +3,51 @@ let contacts = [];
 document.querySelector("#input-data").addEventListener("submit", function (e) {
   e.preventDefault();
   let contactInput = Object.fromEntries(new FormData(e.target));
+  contactInput.isFavorite = false;
+  contactInput.isSelected = false;
   contacts.push(contactInput);
-  console.log(contacts);
+
   window.localStorage.setItem("contacts", JSON.stringify(contacts));
-  console.log(window.localStorage);
-  // renderContacts();
+  console.log("my CONTACTS here", contacts);
+  renderContacts(contacts);
 });
 
-function renderContacts(contactData) {
+function renderContacts(data) {
   if (document.body.querySelector("#outputContainer")) {
     document.body.querySelector("#outputContainer").remove();
   }
-
   let outputContainer = createElement("div", [
     { name: "id", value: "outputContainer" },
   ]);
+  data.forEach((contact) => {
+    let contactContainer = createElement("div", [
+      { name: "id", value: "contactContainer" },
+    ]);
+    let fullName = createElement("p", [{ name: "id", value: "fullName" }]);
+    let email = createElement("p", [{ name: "id", value: "email" }]);
+    let address = createElement("p", [{ name: "id", value: "address" }]);
+    let phone = createElement("p", [{ name: "id", value: "phone" }]);
+    let editBtn = createElement("button", [{ name: "id", value: "editBtn" }]);
+
+    fullName.textContent = "Name: " + contact.fullName;
+    email.textContent = "Email: " + contact.email;
+    (address.textContent = "Address: "), contact.address;
+    phone.textContent = "Phone: " + contact.phone;
+    editBtn.textContent = "Edit Info";
+
+    contactContainer.append(fullName, email, address, phone, editBtn);
+    outputContainer.append(contactContainer);
+  });
   document.body.append(outputContainer);
-
-  let fullName = createElement("div", [
-    { name: "id", value: "contactData.fullName" },
-  ]);
-  let email = createElement("div", [{ name: "id", value: "email" }]);
-  let address = createElement("div", [{ name: "id", value: "address" }]);
-  let phone = createElement("div", [{ name: "id", value: "phone" }]);
-
-  outputContainer.append(fullName, email, address, phone);
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  let loadedData = JSON.parse(window.localStorage.getItem("contacts"));
-  // console.log(...loadedData);
-  // for (contact of loadedData) {
-  //   console.log(contact.fullName);
-  // }
-  // console.log(...loadedData);
-  // renderContacts(...loadedData);
+  if (window.localStorage.getItem("contacts")) {
+    let loadedData = JSON.parse(window.localStorage.getItem("contacts"));
+    console.log(loadedData);
+    contacts = loadedData;
+    renderContacts(loadedData);
+  }
 });
 
 function createElement(tag, props) {
