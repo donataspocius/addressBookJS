@@ -21,7 +21,7 @@ function renderContacts(data) {
   ]);
   data.forEach((contact) => {
     let contactContainer = createElement("div", [
-      { name: "id", value: `${contact.contactId}` },
+      { name: "id", value: `id${contact.contactId}` },
     ]);
     let fullName = createElement("p", [{ name: "id", value: "fullName" }]);
     let email = createElement("p", [{ name: "id", value: "email" }]);
@@ -29,11 +29,11 @@ function renderContacts(data) {
     let phone = createElement("p", [{ name: "id", value: "phone" }]);
     let editBtn = createElement("button", [{ name: "id", value: "editBtn" }]);
     let deleteBtn = createElement("button", [
-      { name: "name", value: "deleteBtn" },
+      { name: "name", value: `${contact.contactId}` },
     ]);
-    deleteBtn.setAttribute("id", `${contact.contactId}`);
+    // deleteBtn.setAttribute("id", `${contact.contactId}`);
     let favoriteBtn = createElement("button", [
-      { name: "id", value: "favoriteBtn" },
+      { name: "id", value: `${contact.contactId}` },
     ]);
 
     fullName.textContent = "Name: " + contact.fullName;
@@ -46,7 +46,14 @@ function renderContacts(data) {
 
     deleteBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      deleteContact(e.target.id);
+      deleteContact(e.target.name);
+      console.log(e.target.name);
+      renderContacts(contacts);
+    });
+
+    favoriteBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      addFavorite(e.target.id);
       renderContacts(contacts);
     });
 
@@ -63,7 +70,6 @@ function renderContacts(data) {
     outputContainer.append(contactContainer);
   });
   document.body.append(outputContainer);
-  // buttons();
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -92,19 +98,18 @@ function deleteContact(contactId) {
   contacts.splice(indexToDel, 1);
 }
 
-// function buttons() {
-//   document.querySelectorAll("button:not(#submit)").forEach((btn) =>
-//     btn.addEventListener("click", function (e) {
-//       e.preventDefault(e);
-//       // console.log(e.target.id);
-//       // console.log(e.target.parentElement);
-//       let id = e.target.id;
-//       switch (e.target.name) {
-//         case "deleteBtn": {
-//           console.log(e.target.id);
-//           break;
-//         }
-//       }
-//     })
-//   );
-// }
+function addFavorite(contactId) {
+  console.log(contactId);
+  let indexToAdd = contacts.findIndex((singleContact) => {
+    return singleContact.contactId === Number(contactId);
+  });
+  console.log("index is: ", indexToAdd);
+  if (!contacts[indexToAdd].isFavorite) {
+    contacts[indexToAdd].isFavorite = true;
+    document.querySelector("#id1662488753354").backgroundColor = "green";
+    // element.style.backgroundColor = "red"
+  } else {
+    contacts[indexToAdd].isFavorite = false;
+  }
+  console.log("is favorite? ", contacts[indexToAdd].isFavorite);
+}
