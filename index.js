@@ -5,10 +5,10 @@ document.querySelector("#input-data").addEventListener("submit", function (e) {
   let contactInput = Object.fromEntries(new FormData(e.target));
   contactInput.isFavorite = false;
   contactInput.isSelected = false;
+  contactInput.contactId = Date.now();
   contacts.push(contactInput);
 
   window.localStorage.setItem("contacts", JSON.stringify(contacts));
-  console.log("my CONTACTS here", contacts);
   renderContacts(contacts);
 });
 
@@ -21,24 +21,42 @@ function renderContacts(data) {
   ]);
   data.forEach((contact) => {
     let contactContainer = createElement("div", [
-      { name: "id", value: "contactContainer" },
+      { name: "id", value: `${contact.contactId}` },
     ]);
     let fullName = createElement("p", [{ name: "id", value: "fullName" }]);
     let email = createElement("p", [{ name: "id", value: "email" }]);
     let address = createElement("p", [{ name: "id", value: "address" }]);
     let phone = createElement("p", [{ name: "id", value: "phone" }]);
     let editBtn = createElement("button", [{ name: "id", value: "editBtn" }]);
+    let deleteBtn = createElement("button", [
+      { name: "name", value: "deleteBtn" },
+    ]);
+    deleteBtn.setAttribute("id", `${contact.contactId}`);
+    let favoriteBtn = createElement("button", [
+      { name: "id", value: "favoriteBtn" },
+    ]);
 
     fullName.textContent = "Name: " + contact.fullName;
     email.textContent = "Email: " + contact.email;
-    (address.textContent = "Address: "), contact.address;
+    address.textContent = "Address: " + contact.address;
     phone.textContent = "Phone: " + contact.phone;
     editBtn.textContent = "Edit Info";
+    deleteBtn.textContent = `Delete ${contact.fullName}`;
+    favoriteBtn.textContent = "Make Favorite";
 
-    contactContainer.append(fullName, email, address, phone, editBtn);
+    contactContainer.append(
+      fullName,
+      email,
+      address,
+      phone,
+      editBtn,
+      deleteBtn,
+      favoriteBtn
+    );
     outputContainer.append(contactContainer);
   });
   document.body.append(outputContainer);
+  buttons();
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -58,4 +76,24 @@ function createElement(tag, props) {
     });
   }
   return newTag;
+}
+
+function buttons() {
+  document.querySelectorAll("button:not(#submit)").forEach((btn) =>
+    btn.addEventListener("click", function (e) {
+      e.preventDefault(e);
+      // console.log(e.target.id);
+      // console.log(e.target.parentElement);
+      let id = e.target.id;
+      switch (e.target.name) {
+        case "deleteBtn": {
+          // for (let i = 0; i < contacts.length; i++) {
+          // let index = contacts.indexOf(contacts[i].contactId === e.target.id);
+          // console.log(index);
+          // }
+          break;
+        }
+      }
+    })
+  );
 }
