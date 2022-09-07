@@ -8,7 +8,7 @@ document.querySelector("#input-data").addEventListener("submit", function (e) {
   contactInput.contactId = Date.now();
   contacts.push(contactInput);
 
-  window.localStorage.setItem("contacts", JSON.stringify(contacts));
+  updateLocalStorage(contacts);
   renderContacts(contacts);
 });
 
@@ -44,10 +44,19 @@ function renderContacts(data) {
     deleteBtn.textContent = `Delete ${contact.fullName}`;
     favoriteBtn.textContent = "Make Favorite";
 
+    contact.isFavorite
+      ? (contactContainer.style.backgroundColor = "green")
+      : (contactContainer.style.backgroundColor = "none");
+
+    contactContainer.style.border = "1px solid";
+    contactContainer.style.marginBottom = "15px";
+    // contactContainer.style.backgroundColor = "azure";
+
     deleteBtn.addEventListener("click", (e) => {
       e.preventDefault();
       deleteContact(e.target.name);
       console.log(e.target.name);
+      updateLocalStorage(contacts);
       renderContacts(contacts);
     });
 
@@ -55,6 +64,8 @@ function renderContacts(data) {
       e.preventDefault();
       addFavorite(e.target.id);
       renderContacts(contacts);
+
+      // updateLocalStorage(contacts);
     });
 
     contactContainer.append(
@@ -104,13 +115,40 @@ function addFavorite(contactId) {
     return singleContact.contactId === Number(contactId);
   });
   console.log("index is: ", indexToAdd);
-  if (!contacts[indexToAdd].isFavorite) {
-    contacts[indexToAdd].isFavorite = true;
-    document.querySelector("#id1662488753354").style.backgroundColor = "green";
-    console.log(document.querySelector("#id1662488753354"));
-    // element.style.backgroundColor = "red"
-  } else {
-    contacts[indexToAdd].isFavorite = false;
-  }
+  contacts[indexToAdd].isFavorite
+    ? (contacts[indexToAdd].isFavorite = false)
+    : (contacts[indexToAdd].isFavorite = true);
+
   console.log("is favorite? ", contacts[indexToAdd].isFavorite);
+}
+
+function updateLocalStorage(data) {
+  window.localStorage.setItem("contacts", JSON.stringify(data));
+}
+
+document.querySelector("#searchBtn").addEventListener("click", function (e) {
+  e.preventDefault();
+  doSearch();
+});
+
+function doSearch() {
+  let searchInput = document.querySelector("input[name=search]");
+
+  if (document.querySelector("#searchInfo")) {
+    document.querySelector("#searchInfo").remove();
+  }
+
+  if (searchInput.value) {
+    let searchResult = contacts.filter((el) => {
+      return el.fullName.toLowerCase() === searchInput.value.toLowerCase();
+    });
+    renderContacts(searchResult);
+
+    let searchInfo = document.createElement("div");
+    searchInfo.setAttribute("id", "searchInfo");
+    searchInfo.textContent = `Found ${searchResult.length} contacts`;
+    document.querySelector(".searchContainer").append(searchInfo);
+  } else {
+    renderContacts(contacts);
+  }
 }
