@@ -44,6 +44,12 @@ function renderContacts(data) {
     deleteBtn.textContent = `Delete ${contact.fullName}`;
     favoriteBtn.textContent = "Make Favorite";
 
+    deleteBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      deleteContact(e.target.id);
+      renderContacts(contacts);
+    });
+
     contactContainer.append(
       fullName,
       email,
@@ -53,10 +59,11 @@ function renderContacts(data) {
       deleteBtn,
       favoriteBtn
     );
+
     outputContainer.append(contactContainer);
   });
   document.body.append(outputContainer);
-  buttons();
+  // buttons();
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -78,22 +85,26 @@ function createElement(tag, props) {
   return newTag;
 }
 
-function buttons() {
-  document.querySelectorAll("button:not(#submit)").forEach((btn) =>
-    btn.addEventListener("click", function (e) {
-      e.preventDefault(e);
-      // console.log(e.target.id);
-      // console.log(e.target.parentElement);
-      let id = e.target.id;
-      switch (e.target.name) {
-        case "deleteBtn": {
-          // for (let i = 0; i < contacts.length; i++) {
-          // let index = contacts.indexOf(contacts[i].contactId === e.target.id);
-          // console.log(index);
-          // }
-          break;
-        }
-      }
-    })
-  );
+function deleteContact(contactId) {
+  let indexToDel = contacts.findIndex((singleContact) => {
+    return singleContact.contactId === Number(contactId);
+  });
+  contacts.splice(indexToDel, 1);
 }
+
+// function buttons() {
+//   document.querySelectorAll("button:not(#submit)").forEach((btn) =>
+//     btn.addEventListener("click", function (e) {
+//       e.preventDefault(e);
+//       // console.log(e.target.id);
+//       // console.log(e.target.parentElement);
+//       let id = e.target.id;
+//       switch (e.target.name) {
+//         case "deleteBtn": {
+//           console.log(e.target.id);
+//           break;
+//         }
+//       }
+//     })
+//   );
+// }
