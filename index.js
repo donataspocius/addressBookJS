@@ -65,7 +65,7 @@ function renderContacts(data) {
       addFavorite(e.target.id);
       renderContacts(contacts);
 
-      // updateLocalStorage(contacts);
+      updateLocalStorage(contacts);
     });
 
     contactContainer.append(
