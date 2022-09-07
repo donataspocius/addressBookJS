@@ -106,7 +106,8 @@ function addFavorite(contactId) {
   console.log("index is: ", indexToAdd);
   if (!contacts[indexToAdd].isFavorite) {
     contacts[indexToAdd].isFavorite = true;
-    document.querySelector("#id1662488753354").backgroundColor = "green";
+    document.querySelector("#id1662488753354").style.backgroundColor = "green";
+    console.log(document.querySelector("#id1662488753354"));
     // element.style.backgroundColor = "red"
   } else {
     contacts[indexToAdd].isFavorite = false;
